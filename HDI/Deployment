@@ -1,0 +1,38 @@
+param(
+ 
+ [string]
+ $subscriptionId = "a8f4390b-78e7-41c8-a8d3-ad85b4fed560",
+
+ 
+ [string]
+ $resourceGroupName = "HDInsight",
+
+ [string]
+ $resourceGroupLocation = "Central India",
+
+  [string]
+ $deploymentName = "newhdcluster",
+
+ [string]
+ $templateFilePath = "https://sahdinsight86.blob.core.windows.net/template/template1.json?sp=r&st=2018-10-29T05:58:38Z&se=2018-11-05T13:58:38Z&spr=https&sv=2017-11-09&sig=cTFzgSSpFeZ32U0lS%2FuG0OXXnsDDcBcXka7LbOZkYGg%3D&sr=b",
+
+ [string]
+ $parametersFilePath = "https://sahdinsight86.blob.core.windows.net/template/parameters1.jason?sp=r&st=2018-10-29T06:01:52Z&se=2018-11-05T14:01:52Z&spr=https&sv=2017-11-09&sig=V8wulfXq7tuO7i4PQq4DCHBJuSlwDuPcgz1YYhC6RLI%3D&sr=b"
+)
+
+
+
+# sign in
+$connectionName = "AzureRunAsConnection"
+#Get the connection "AzureRunAsConnection "
+$servicePrincipalConnection=Get-AutomationConnection -Name $connectionName         
+#Logging in to Azure..."
+Add-AzureRmAccount -ServicePrincipal -Tenant $servicePrincipalConnection.TenantId -ApplicationId $servicePrincipalConnection.ApplicationId -CertificateThumbprint $servicePrincipalConnection.CertificateThumbprint
+# select subscription
+#Write-Host "Selecting subscription '$subscriptionId'";
+#Select-AzureRmSubscription -SubscriptionID $subscriptionId
+
+#Create or check for existing resource group
+
+# Start the deployment
+New-AzureRmResourceGroupDeployment -Name hdinsightcluter -ResourceGroupName $resourceGroupName -TemplateUri $templateFilePath -TemplateParameterUri $parametersFilePath
